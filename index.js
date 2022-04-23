@@ -129,7 +129,7 @@ function update(){
             uiLayer.warning = true;
         }else if(virus.offsetTop >= winH){
           // game over
-            gameOVer();
+            gameOver();
         }
     }
 }
@@ -140,14 +140,21 @@ function showWarning() {
   uiLayer.appendChild(warningLayer)
 }
 
+
+let gameOverAlert = document.querySelector('#game-over-alert')
 // 游戏结束
-function gameOVer(){
+function gameOver(){
   clearInterval(timer)
   clearInterval(updater)
   config.status = 2;
+  gameOverAlert.style.display = 'block'
 }
 
+
+
 let scorelabel = document.getElementById('score-label')
+
+let xmEffect = document.querySelector('#xm')
 
 // 监听键盘事件
 window.addEventListener('keyup', function(e){
@@ -175,6 +182,28 @@ window.addEventListener('keyup', function(e){
 
         score++;
         scorelabel.innerHTML = score;
+
+        // 播放消灭音效
+        xmEffect.currentTime = 0;
+        xmEffect.play()
       }
     }
 })
+
+// 重玩
+let restartBtn = document.querySelector('#restart-btn')
+restartBtn.onclick = function(){
+  gameOverAlert.style.display = 'none'
+  resetGame()
+}
+
+function resetGame(){
+  config.status = 1;
+  score = 0;
+  scorelabel.innerHTML = score;
+  game.innerHTML = ''
+  viruses = []
+  uiLayer.removeChild(document.querySelector('.warning'))
+  uiLayer.warning = false;
+  startGame()
+}
